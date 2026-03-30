@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+# MyContacts
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A contact management web application built with React. Create, view, edit, and delete contacts with an intuitive interface featuring search, sorting, and form validation.
+
+This project was developed as part of the **Fullstack JavaScript course** by [Mateus Silva](https://jstack.com.br).
+
+## Features
+
+- **Contact List** - View all contacts with name, email, phone, and category
+- **Search** - Real-time search by contact name
+- **Sorting** - Toggle between ascending and descending order
+- **Create Contact** - Add new contacts with a validated form
+- **Edit Contact** - Update existing contact information
+- **Delete Contact** - Remove contacts from the list
+- **Form Validation** - Required fields, email validation, and phone formatting
+- **Loading States** - Visual feedback during API requests
+
+## Tech Stack
+
+- **React** 17.0.2
+- **React Router DOM** 5.3.0
+- **Styled Components** 6.3.11
+- **Create React App** 5.0.1
+
+## Prerequisites
+
+- Node.js
+- Yarn or npm
+- Backend API running on `http://localhost:3001`
+
+## Getting Started
+
+1. Install dependencies:
+
+```bash
+yarn install
+```
+
+2. Start the development server:
+
+```bash
+yarn start
+```
+
+The app will open at [http://localhost:3000](http://localhost:3000).
 
 ## Available Scripts
 
-In the project directory, you can run:
+| Command | Description |
+|---------|-------------|
+| `yarn start` | Run the app in development mode |
+| `yarn build` | Build the app for production |
+| `yarn test` | Launch the test runner |
 
-### `yarn start`
+## Project Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+src/
+├── assets/          # Images, icons, and global styles
+├── components/      # Reusable UI components
+│   ├── App/         # Main app wrapper with routing and theming
+│   ├── Button.js    # Styled button (default and danger variants)
+│   ├── ContactForm/ # Form for creating/editing contacts
+│   ├── FormGroup/   # Form field wrapper with error display
+│   ├── Header/      # Logo header
+│   ├── Input.js     # Styled input field
+│   ├── Loader/      # Loading spinner overlay (portal-based)
+│   ├── Modal/       # Modal dialog
+│   ├── PageHeader/  # Page header with back navigation
+│   └── Select.js    # Styled select dropdown
+├── hooks/           # Custom React hooks
+├── pages/           # Route pages
+│   ├── Home/        # Contact list with search and sort
+│   ├── NewContact/  # Create contact form
+│   └── EditContact/ # Edit contact form
+├── services/        # API communication layer
+└── utils/           # Utility functions
+```
