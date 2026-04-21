@@ -25,6 +25,33 @@ class HttpClient {
     // não usa return aqui porque o throw já interrompe a execução da função, ou seja, o código abaixo do throw não será executado.
     // O throw é usado para lançar um erro e interromper a execução normal do código, enquanto o return é usado para retornar um valor e encerrar a função normalmente.
   }
+
+  async post(path, body) {
+    await delay(500);
+
+    const headers = new Headers({
+      "Content-Type": "application/json",
+    });
+
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers,
+    });
+
+    const contentType = response.headers.get("Content-Type");
+
+    let responseBody;
+    if (contentType && contentType.includes("application/json")) {
+      responseBody = await response.json();
+    }
+
+    if (response.ok) {
+      return responseBody;
+    }
+
+    throw new APIError(response, responseBody);
+  }
 }
 
 export default HttpClient;

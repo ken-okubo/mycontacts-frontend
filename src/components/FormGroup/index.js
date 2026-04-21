@@ -1,9 +1,17 @@
+import Spinner from "../Spinner";
 import { Container } from "./styles";
 
-export default function FormGroup({ children, error }) {
+export default function FormGroup({ children, error, $isLoading }) {
   return (
-    <Container>
-      {children}
+    <Container $isLoading={$isLoading} error={error}>
+      <div className="form-item">
+        {children}
+        {$isLoading && (
+          <div className="loader">
+            <Spinner $size={12} />
+          </div>
+        )}
+      </div>
       {error && <small>{error}</small>}
     </Container>
   );

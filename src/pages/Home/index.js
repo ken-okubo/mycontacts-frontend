@@ -1,17 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import emptyBox from "../../assets/images/emptybox.svg";
 import arrow from "../../assets/images/icons/arrow.svg";
 import edit from "../../assets/images/icons/edit.svg";
 import trash from "../../assets/images/icons/trash.svg";
+import magnifierQuestion from "../../assets/images/magnifier-question.svg";
 import sad from "../../assets/images/sad.svg";
 import { Container } from "../../components/App/styles";
 import Button from "../../components/Button";
 import {
   Card,
+  EmptyBox,
   ErrorContainer,
   Header,
   InputSearchContainer,
   ListHeader,
+  SearchNotFoundContainer,
 } from "./styles";
 
 import Loader from "../../components/Loader";
@@ -35,11 +39,14 @@ export default function Home() {
     );
   }, [contacts, searchTerm]);
 
-  async function loadContacts() {
+  // useCallback é um hook do React que retorna uma função memoizada, ou seja, uma função que só é recriada quando as dependências especificadas mudam.
+  // Ele é útil para otimizar o desempenho, evitando a criação de funções desnecessárias em cada renderização, especialmente quando essas funções são passadas como props para componentes filhos.
+  const loadContacts = useCallback(async () => {
     try {
       setIsLoading(true);
 
       const contactsList = await ContactsService.listContacts(orderBy);
+      await ContactsService.listContacts(orderBy);
 
       setContacts(contactsList);
     } catch (error) {
@@ -47,11 +54,11 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [orderBy]);
 
   useEffect(() => {
     loadContacts();
-  }, [orderBy]); // o orderBy após a virgula indica que o useEffect deve ser executado sempre que o valor de orderBy for alterado.
+  }, [loadContacts]); // o orderBy após a virgula indica que o useEffect deve ser executado sempre que o valor de orderBy for alterado.
 
   function handleToggleOrderBy() {
     setOrderBy((prevState) => (prevState === "asc" ? "desc" : "asc"));
@@ -69,17 +76,28 @@ export default function Home() {
   return (
     <Container>
       {isLoading && <Loader isLoading={isLoading} />}
-      <InputSearchContainer>
-        <input
-          type="text"
-          placeholder="Pesquisar pelo nome..."
-          value={searchTerm}
-          onChange={handleChangeSearchTerm}
-        />
-      </InputSearchContainer>
 
-      <Header hasError={hasError}>
-        {!hasError && (
+      {contacts.length > 0 && (
+        <InputSearchContainer>
+          <input
+            type="text"
+            placeholder="Pesquisar pelo nome..."
+            value={searchTerm}
+            onChange={handleChangeSearchTerm}
+          />
+        </InputSearchContainer>
+      )}
+
+      <Header
+        $justifyContent={
+          hasError
+            ? "flex-end"
+            : contacts.length > 0
+              ? "space-between"
+              : "center"
+        }
+      >
+        {!hasError && contacts.length > 0 && (
           <strong>
             {filteredContacts.length}
             {filteredContacts.length === 1 ? " contato" : " contatos"}
@@ -103,6 +121,26 @@ export default function Home() {
 
       {!hasError && (
         <>
+          {contacts.length < 1 && !isLoading && (
+            <EmptyBox>
+              <img src={emptyBox} alt="Empty Box" />
+              <p>
+                Você ainda não tem nenhum contato cadastrado Clique no botão{" "}
+                <strong>"Novo Contato"</strong> para adicionar o seu primeiro.
+              </p>
+            </EmptyBox>
+          )}
+
+          {contacts.length > 0 && filteredContacts.length < 1 && (
+            <SearchNotFoundContainer>
+              <img src={magnifierQuestion} alt="Magnifier Question" />
+              <span>
+                Nenhum contato encontrado com o nome informado{" "}
+                <strong>"{searchTerm}"</strong>.
+              </span>
+            </SearchNotFoundContainer>
+          )}
+
           {filteredContacts.length > 0 && (
             <ListHeader $orderBy={orderBy}>
               <button type="button" onClick={handleToggleOrderBy}>
