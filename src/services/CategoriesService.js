@@ -8,10 +8,6 @@ class CategoriesService {
   async listCategories() {
     return this.httpClient.get(`/categories`);
   }
-
-  async createContact(formData) {
-    return this.httpClient.post(`/contacts`, formData);
-  }
 }
 
 const categoriesService = new CategoriesService();

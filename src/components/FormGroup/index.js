@@ -3,7 +3,7 @@ import { Container } from "./styles";
 
 export default function FormGroup({ children, error, $isLoading }) {
   return (
-    <Container $isLoading={$isLoading} error={error}>
+    <Container $isLoading={$isLoading}>
       <div className="form-item">
         {children}
         {$isLoading && (

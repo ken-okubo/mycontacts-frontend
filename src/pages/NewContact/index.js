@@ -4,15 +4,19 @@ import ContactsService from "../../services/ContactsService";
 
 export default function NewContact() {
   async function handleSubmit(formData) {
-    const contact = {
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      category_id: formData.categoryId,
-    };
+    try {
+      const contact = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        category_id: formData.categoryId,
+      };
 
-    const response = await ContactsService.createContact(contact);
-    console.log(response);
+      const response = await ContactsService.createContact(contact);
+      console.log(response);
+    } catch (error) {
+      alert(error);
+    }
   }
 
   return (

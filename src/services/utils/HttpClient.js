@@ -5,14 +5,40 @@ class HttpClient {
     this.baseUrl = baseUrl;
   }
 
-  async get(path) {
+  get(path, options) {
+    return this.makeRequest(path, { method: "GET", headers: options?.headers });
+  }
+
+  post(path, options) {
+    return this.makeRequest(path, {
+      method: "POST",
+      body: options?.body,
+      headers: options?.headers,
+    });
+  }
+
+  async makeRequest(path, options) {
     await delay(500);
 
-    const response = await fetch(`${this.baseUrl}${path}`);
+    const headers = new Headers();
+    if (options.body) {
+      headers.append("Content-Type", "application/json");
+    }
 
-    const contentType = response.headers.get("Content-Type");
+    if (options.headers) {
+      Object.entries(options.headers).forEach(([key, value]) => {
+        headers.append(key, value);
+      });
+    }
+
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: options.method,
+      body: JSON.stringify(options.body),
+      headers,
+    });
 
     let body;
+    const contentType = response.headers.get("Content-Type");
     if (contentType && contentType.includes("application/json")) {
       body = await response.json();
     }
@@ -22,35 +48,6 @@ class HttpClient {
     }
 
     throw new APIError(response, body);
-    // não usa return aqui porque o throw já interrompe a execução da função, ou seja, o código abaixo do throw não será executado.
-    // O throw é usado para lançar um erro e interromper a execução normal do código, enquanto o return é usado para retornar um valor e encerrar a função normalmente.
-  }
-
-  async post(path, body) {
-    await delay(500);
-
-    const headers = new Headers({
-      "Content-Type": "application/json",
-    });
-
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers,
-    });
-
-    const contentType = response.headers.get("Content-Type");
-
-    let responseBody;
-    if (contentType && contentType.includes("application/json")) {
-      responseBody = await response.json();
-    }
-
-    if (response.ok) {
-      return responseBody;
-    }
-
-    throw new APIError(response, responseBody);
   }
 }
 
