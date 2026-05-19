@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import ContactForm from "../../components/ContactForm";
 import Loader from "../../components/Loader";
 import PageHeader from "../../components/PageHeader";
+import useIsMounted from "../../hooks/useIsMounted";
 import ContactsService from "../../services/ContactsService";
 import toast from "../../utils/toast";
 
@@ -13,27 +14,31 @@ export default function EditContact() {
   const contactFormRef = useRef(null);
   const { id } = useParams();
   const history = useHistory();
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     async function loadContact() {
       try {
         const contact = await ContactsService.getContactById(id);
 
-        contactFormRef.current.setFieldsValues(contact);
-        setContactName(contact.name);
-
-        setIsLoading(false);
+        if (isMounted()) {
+          contactFormRef.current.setFieldsValues(contact);
+          setIsLoading(false);
+          setContactName(contact.name);
+        }
       } catch {
-        history.push("/");
-        toast({
-          type: "error",
-          text: "Ocorreu um erro ao carregar os dados do contato.",
-          duration: 3000,
-        });
+        if (isMounted()) {
+          history.push("/");
+          toast({
+            type: "error",
+            text: "Ocorreu um erro ao carregar os dados do contato.",
+            duration: 3000,
+          });
+        }
       }
     }
     loadContact();
-  }, [id, history]);
+  }, [id, history, isMounted]);
 
   async function handleSubmit(formData) {
     try {
