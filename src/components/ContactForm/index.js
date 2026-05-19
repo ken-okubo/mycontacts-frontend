@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import useErrors from "../../hooks/useErros";
+import useSafeAsyncState from "../../hooks/useSafeAsyncState";
 import CategoriesService from "../../services/CategoriesService";
 import formatPhone from "../../utils/formatPhone";
 import isEmailValid from "../../utils/isEmailValid";
@@ -17,8 +18,8 @@ const ContactForm = forwardRef(function ContactForm(
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [categories, setCategories] = useSafeAsyncState([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useSafeAsyncState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useImperativeHandle(ref, () => {
@@ -28,6 +29,12 @@ const ContactForm = forwardRef(function ContactForm(
         setEmail(contact.email ?? "");
         setPhone(formatPhone(contact.phone ?? ""));
         setCategoryId(contact.category_id ?? "");
+      },
+      resetFields: () => {
+        setName("");
+        setEmail("");
+        setPhone("");
+        setCategoryId("");
       },
     };
   }, []);
@@ -50,7 +57,7 @@ const ContactForm = forwardRef(function ContactForm(
     }
 
     loadCategories();
-  }, []);
+  }, [setCategories, setIsLoadingCategories]);
 
   function handleNameChange(event) {
     setName(event.target.value);
@@ -89,11 +96,6 @@ const ContactForm = forwardRef(function ContactForm(
     });
 
     setIsSubmitting(false);
-
-    setName("");
-    setEmail("");
-    setPhone("");
-    setCategoryId("");
   }
 
   return (

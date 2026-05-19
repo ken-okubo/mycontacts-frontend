@@ -24,12 +24,12 @@ export const StyledButton = styled.button`
   }
 
   &:disabled {
-    background: #ccc;
-    cursor: default;
+    background: #ccc !important;
+    cursor: default !important;
   }
 
-  ${({ danger }) =>
-    danger &&
+  ${({ $danger }) =>
+    $danger &&
     css`
       background: ${({ theme }) => theme.colors.danger.main};
 
