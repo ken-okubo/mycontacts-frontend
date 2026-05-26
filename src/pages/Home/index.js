@@ -44,7 +44,7 @@ export default function Home() {
     );
   }, [contacts, searchTerm]);
 
-  // useCallback é um hook do React que retorna uma função memoizada, ou seja, uma função que só é recriada quando as dependências especificadas mudam.
+  // useCallback é um hook do React que retorna uma função memorizada, ou seja, uma função que só é recriada quando as dependências especificadas mudam.
   // Ele é útil para otimizar o desempenho, evitando a criação de funções desnecessárias em cada renderização, especialmente quando essas funções são passadas como props para componentes filhos.
   const loadContacts = useCallback(async () => {
     try {
@@ -208,8 +208,8 @@ export default function Home() {
               <div className="info">
                 <div className="contact-name">
                   <strong>{contact.name}</strong>
-                  {contact.category_name && (
-                    <small>{contact.category_name}</small>
+                  {contact.category.name && (
+                    <small>{contact.category.name}</small>
                   )}
                 </div>
                 <span>{contact.email}</span>

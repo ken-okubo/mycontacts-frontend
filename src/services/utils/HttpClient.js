@@ -1,5 +1,4 @@
 import APIError from "../../errors/APIError";
-import delay from "../../utils/delay";
 class HttpClient {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
@@ -33,8 +32,6 @@ class HttpClient {
   }
 
   async makeRequest(path, options) {
-    await delay(500);
-
     const headers = new Headers();
     if (options.body) {
       headers.append("Content-Type", "application/json");
