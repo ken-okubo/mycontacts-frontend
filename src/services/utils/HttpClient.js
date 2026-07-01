@@ -1,11 +1,15 @@
-import APIError from "../../errors/APIError";
+import APIError from "../../hooks/errors/APIError";
 class HttpClient {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
   }
 
   get(path, options) {
-    return this.makeRequest(path, { method: "GET", headers: options?.headers });
+    return this.makeRequest(path, {
+      method: "GET",
+      headers: options?.headers,
+      signal: options?.signal,
+    });
   }
 
   post(path, options) {
@@ -13,6 +17,7 @@ class HttpClient {
       method: "POST",
       body: options?.body,
       headers: options?.headers,
+      signal: options?.signal,
     });
   }
 
@@ -42,11 +47,11 @@ class HttpClient {
         headers.append(key, value);
       });
     }
-
     const response = await fetch(`${this.baseUrl}${path}`, {
       method: options.method,
       body: JSON.stringify(options.body),
       headers,
+      signal: options.signal,
     });
 
     let body;

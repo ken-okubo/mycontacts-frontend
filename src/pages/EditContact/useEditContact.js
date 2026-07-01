@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import useIsMounted from "../../hooks/useIsMounted";
 import ContactsService from "../../services/ContactsService";
 import toast from "../../utils/toast";
 
@@ -11,31 +10,40 @@ export default function useEditContact() {
   const contactFormRef = useRef(null);
   const { id } = useParams();
   const history = useHistory();
-  const isMounted = useIsMounted();
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadContact() {
       try {
-        const contact = await ContactsService.getContactById(id);
+        const contact = await ContactsService.getContactById(
+          id,
+          controller.signal,
+        );
 
-        if (isMounted()) {
-          contactFormRef.current.setFieldsValues(contact);
-          setIsLoading(false);
-          setContactName(contact.name);
+        contactFormRef.current.setFieldsValues(contact);
+        setIsLoading(false);
+        setContactName(contact.name);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
         }
-      } catch {
-        if (isMounted()) {
-          history.push("/");
-          toast({
-            type: "error",
-            text: "Ocorreu um erro ao carregar os dados do contato.",
-            duration: 3000,
-          });
-        }
+
+        history.push("/");
+        toast({
+          type: "error",
+          text: "Ocorreu um erro ao carregar os dados do contato.",
+          duration: 3000,
+        });
       }
     }
+
     loadContact();
-  }, [id, history, isMounted]);
+
+    return () => {
+      controller.abort();
+    };
+  }, [id, history]);
 
   async function handleSubmit(contact) {
     try {
