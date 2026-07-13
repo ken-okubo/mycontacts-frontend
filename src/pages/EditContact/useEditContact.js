@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ContactsService from "../../services/ContactsService";
 import toast from "../../utils/toast";
 
@@ -9,7 +9,7 @@ export default function useEditContact() {
 
   const contactFormRef = useRef(null);
   const { id } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -29,7 +29,7 @@ export default function useEditContact() {
           return;
         }
 
-        history.push("/");
+        navigate("/");
         toast({
           type: "error",
           text: "Ocorreu um erro ao carregar os dados do contato.",
@@ -43,7 +43,7 @@ export default function useEditContact() {
     return () => {
       controller.abort();
     };
-  }, [id, history]);
+  }, [id, navigate]);
 
   async function handleSubmit(contact) {
     try {
